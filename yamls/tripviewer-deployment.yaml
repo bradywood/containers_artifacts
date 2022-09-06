@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: tripviewer
+  name: tripviewer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tripviewer
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: tripviewer
+      name: tripviewer
+    spec:
+      containers:
+      - image: registrytgz8460.azurecr.io/tripinsights/tripviewer:1.0
+        name: tripviewer
+        env:
+        - name: USERPROFILE_API_ENDPOINT
+          value: "http://userprofile"
+        - name: TRIPS_API_ENDPOINT
+          value: "http://trips"

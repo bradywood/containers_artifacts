@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: poi
+  name: poi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: poi
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: poi
+      name: poi
+    spec:
+      containers:
+      - image: registrytgz8460.azurecr.io/tripinsights/poi:1.0
+        name: poi
+        env:
+        - name: SQL_SERVER
+          value: "sqlservertgz8460.database.windows.net"
+        volumeMounts:
+        - name: sqlsecret
+          mountPath: "/secrets"  
+      volumes:
+      - name: sqlsecret
+        secret:
+          secretName: sqlsecret    
