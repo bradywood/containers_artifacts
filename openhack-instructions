@@ -1,0 +1,51 @@
+sudo docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=Password123" \
+   -p 1433:1433 --name sql1 --hostname sql1 \
+   -d \
+   mcr.microsoft.com/mssql/server:2022-latest
+
+
+   docker run --net trip -e SQLFQDN=sql1 -e SQLUSER=SA -e SQLPASS=Password123 -e SQLDB=mydrivingDB    registrytgz8460.azurecr.io/dataload:1.0
+
+   registrytgz8460 
+
+   docker run -d --net trip -p 8080:80 --name poi -e "SQL_USER=SA" -e "SQL_PASSWORD=Password123" -e "SQL_SERVER=sql1" -e "ASPNETCORE_ENVIRONMENT=Local" tripinsights/poi:1.0
+
+   docker run -d -p 8080:80 --name user-java -e "SQL_PASSWORD=Password123" -e "SQL_SERVER=sql1" tripinsights/user-java:1.0
+
+
+
+   docker tag tripinsights/userprofile:1.0 registrytgz8460.azurecr.io/tripinsights/userprofile:1.0
+
+   docker push registrytgz8460.azurecr.io/tripinsights/userprofile:1.0
+
+   docker tag tripinsights/tripviewer:1.0 registrytgz8460.azurecr.io/tripinsights/tripviewer:1.0 
+
+   docker push registrytgz8460.azurecr.io/tripinsights/tripviewer:1.0 
+
+dd   docker tag tripinsights/poi:1.0  registrytgz8460.azurecr.io/tripinsights/poi:1.0
+
+   docker push registrytgz8460.azurecr.io/tripinsights/poi:1.0
+
+   docker tag tripinsights/trips:1.0 registrytgz8460.azurecr.io/tripinsights/trips:1.0
+
+   docker push registrytgz8460.azurecr.io/tripinsights/trips:1.0
+
+
+
+az group create --name openHack --location eastus
+
+az aks create -g openHack -n tripAKSCluster --enable-managed-identity --node-count 1 --enable-addons monitoring --enable-msi-auth-for-monitoring  --generate-ssh-keys
+
+
+az aks get-credentials --resource-group openHack --name tripAKSCluster
+
+
+Service principal ID: 67f1578c-b835-4a04-8b75-470426e7d8e6
+Service principal password: wIw8Q~~XeEjiMCFS8qX2qP5yJ_FIntO5nf1MLaGN
+
+
+kubectl create secret docker-registry openhacksecret \
+    --namespace default \
+    --docker-server=registrytgz8460.azurecr.io \
+    --docker-username=67f1578c-b835-4a04-8b75-470426e7d8e6 \
+    --docker-password=wIw8Q~~XeEjiMCFS8qX2qP5yJ_FIntO5nf1MLaGN
