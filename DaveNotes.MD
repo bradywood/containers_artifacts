@@ -28,6 +28,7 @@ kubectl port-forward trips-b45c7468d-w7p9r 8890:80 &
 kubectl port-forward userjava-9f5b97d9-hvx5l 8891:80 &
 ```
 ## Assignment 3
+```
 az network vnet list -o table
 
 export RESOURCE_GROUP=openHackEastAsia_RG
