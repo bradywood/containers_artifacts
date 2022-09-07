@@ -38,6 +38,7 @@ az network vnet list -o table
 
 export RESOURCE_GROUP=openHackEastAsia_RG
 export VNET=vnet
+export CLUSTER_NAME=tripAKSCluster
 export CLUSTER_SUBNET_NAME=tripAKSSubnet
 export CLUSTER_ADDRESS_SPACE=10.2.1.0/24
 export VNET_RESOURCE_GROUP=teamResources
@@ -64,14 +65,14 @@ export AD_ADMIN_GROUP_ID=$(az ad group list --display-name openHackAKSAdminGroup
 
 az aks create \
     --resource-group $RESOURCE_GROUP \
-    --name tripAKSCluster \
+    --name $CLUSTER_NAME \
     --network-plugin azure \
     --vnet-subnet-id $CLUSTER_SUBNET_ID \
     --docker-bridge-address 172.17.0.1/16 \
     --dns-service-ip 10.2.2.10 \
     --service-cidr 10.2.2.0/24 \
     --enable-managed-identity --node-count 2 --enable-addons monitoring --enable-msi-auth-for-monitoring \
-    --generate-ssh-keys --attach-acr registrytgz8460 
+    --generate-ssh-keys --attach-acr registrytgz8460 \
     --enable-aad --aad-admin-group-object-ids $AD_ADMIN_GROUP_ID
 ```
 
@@ -97,3 +98,10 @@ We need to go back and reacreate with the ad enabled.
 az ad group list --filter "displayname eq '<group-name>'" -o table
 az ad group create --display-name myAKSAdminGroup --mail-nickname myAKSAdminGroup
 az aks create -g myResourceGroup -n myManagedCluster --enable-aad --aad-admin-group-object-ids $AD_ADMIN_GROUP_ID
+
+
+## AD enable Cluster 
+If for some reason AD was not enabled, run below.
+```
+az aks update -g $RESOURCE_GROUP -n $CLUSTER_NAME --enable-aad --aad-admin-group-object-ids $AD_ADMIN_GROUP_ID
+```
