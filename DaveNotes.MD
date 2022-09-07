@@ -81,32 +81,31 @@ az aks create \
 az aks get-credentials --resource-group $openHackEastAsia_RG --name tripAKSCluster
 ```
 
-## Create Namespace
-### kubectl create namespace web --dry-run=client -o yaml > yamls/namespace.yaml
+### Create Namespace - kubectl create namespace web --dry-run=client -o yaml > yamls/namespace.yaml
 ```kubectl create -f yamls/namespace-web-api.yaml ```
 
-## AD Group
-### Create
+
+### AD Group Create
 ```az ad group create --display-name openHackAKSAdminGroup --mail-nickname openHackAKSAdminGroup```
 ### LIST
 ```
 export AD_ADMIN_GROUP_ID=$(az ad group list --display-name openHackAKSAdminGroup --query "[0].id" --output tsv)
 ```
 
-## Create an AKS Cluster with AD enabled.. 
+### Create an AKS Cluster with AD enabled.. 
 We need to go back and reacreate with the ad enabled.
 az ad group list --filter "displayname eq '<group-name>'" -o table
 az ad group create --display-name myAKSAdminGroup --mail-nickname myAKSAdminGroup
 az aks create -g myResourceGroup -n myManagedCluster --enable-aad --aad-admin-group-object-ids $AD_ADMIN_GROUP_ID
 
 
-## AD enable Cluster 
+### AD enable Cluster 
 If for some reason AD was not enabled, run below.
 ```
 az aks update -g $RESOURCE_GROUP -n $CLUSTER_NAME --enable-aad --aad-admin-group-object-ids $AD_ADMIN_GROUP_ID
 ```
 
-## Create AD Groups
+### Create AD Groups
 ```
 export AKS_CLUSTER_ID=$(az aks show \                                                    
     --resource-group $RESOURCE_GROUP \
@@ -138,7 +137,7 @@ az role assignment create \
 
 ```
 
-## Create api and web users
+### Create api and web users
 ```
 AKSAPI_ID=$(az ad user create \
   --display-name "AKS API" \
@@ -160,7 +159,7 @@ az ad group member add --group "api-dev" --member-id $AKSAPI_ID
 az ad group member add --group "web-dev" --member-id $AKSWEB_ID
 ```  
 
-## Create AKS Resource 
+### Create AKS Resource 
 kubectl apply -f createrole.yaml
 
 export API_GROUP_ID=$(az ad group show --group api-dev --query id -o tsv)
@@ -169,10 +168,17 @@ export API_GROUP_ID=$(az ad group show --group api-dev --query id -o tsv)
 export WEB_GROUP_ID=$(az ad group show --group web-dev --query id -o tsv)
 04802ec4-50f5-4fe3-8584-9d26ec3e15e9
 
-## Role Binding
+### Role Binding
 ```
 kubectl apply -f yamls/rolebinding.yaml 
 ```
+
+
+## Assignment 4 - NAMESpaces
+### Services and namespaces
+Some Notes
+namespace.svc.cluster.local
+http://trips.api.svc.cluster.local
 
 
 
