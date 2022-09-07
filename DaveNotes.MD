@@ -67,6 +67,7 @@ az aks create \
     --service-cidr 10.2.2.0/24 \
     --enable-managed-identity --node-count 2 --enable-addons monitoring --enable-msi-auth-for-monitoring \
     --generate-ssh-keys --attach-acr registrytgz8460 
+    --enable-aad 
 ```
 ```
 ### Need to reauthenticate to new cluster
@@ -77,8 +78,13 @@ az aks get-credentials --resource-group $openHackEastAsia_RG --name tripAKSClust
 ### kubectl create namespace web --dry-run=client -o yaml > yamls/namespace.yaml
 ```kubectl create -f yamls/namespace-web-api.yaml ```
 
+## Create AD Group
+```
+az ad group create --display-name openHackAKSAdminGroup --mail-nickname openHackAKSAdminGroup
+```
 
 ## Create an AKS Cluster with AD enabled.. 
 We need to go back and reacreate with the ad enabled.
 az ad group list --filter "displayname eq '<group-name>'" -o table
+az ad group create --display-name myAKSAdminGroup --mail-nickname myAKSAdminGroup
 az aks create -g myResourceGroup -n myManagedCluster --enable-aad --aad-admin-group-object-ids <id> [--aad-tenant-id <id>]
