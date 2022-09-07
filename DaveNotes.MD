@@ -105,3 +105,14 @@ If for some reason AD was not enabled, run below.
 ```
 az aks update -g $RESOURCE_GROUP -n $CLUSTER_NAME --enable-aad --aad-admin-group-object-ids $AD_ADMIN_GROUP_ID
 ```
+
+## Create AD Groups
+```
+export AKS_CLUSTER_ID=$(az aks show \                                                    
+    --resource-group $RESOURCE_GROUP \
+    --name $CLUSTER_NAME \
+    --query id -o tsv)
+
+export APIDEV_ID=$(az ad group create --display-name api-dev --mail-nickname api-dev --query objectId -o tsv)
+
+export WEBDEV_ID=$(az ad group create --display-name web-dev --mail-nickname web-dev --query objectId -o tsv)
