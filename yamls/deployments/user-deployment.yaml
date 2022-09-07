@@ -2,32 +2,33 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: trips
-  name: trips
+    app: userprofile
+  name: userprofile
+  namespace: api
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: trips
+      app: userprofile
   strategy: {}
   template:
     metadata:
       creationTimestamp: null
       labels:
-        app: trips
-      name: trips
+        app: userprofile
+      name: userprofile
     spec:
       containers:
-      - image: registrytgz8460.azurecr.io/tripinsights/trips:1.0
-        name: trips
+      - image: registrytgz8460.azurecr.io/tripinsights/userprofile:1.0
+        name: userprofile
         env:
         - name: SQL_SERVER
           value: "sqlservertgz8460.database.windows.net"
-        - name: OPENAPI_DOCS_URI
-          value: "http://changeme"  
+        - name: ASPNETCORE_ENVIRONMENT
+          value: "Development"  
         volumeMounts:
         - name: sqlsecret
-          mountPath: "/secrets"  
+          mountPath: "/secrets"          
       volumes:
       - name: sqlsecret
         secret:

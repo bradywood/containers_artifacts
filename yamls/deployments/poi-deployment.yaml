@@ -2,30 +2,31 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: userjava
-  name: userjava
+    app: poi
+  name: poi
+  namespace: api
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: userjava
+      app: poi
   strategy: {}
   template:
     metadata:
       creationTimestamp: null
       labels:
-        app: userjava
-      name: userjava
+        app: poi
+      name: poi
     spec:
       containers:
-      - image: registrytgz8460.azurecr.io/tripinsights/user-java:1.0
-        name: userjava
+      - image: registrytgz8460.azurecr.io/tripinsights/poi:1.0
+        name: poi
         env:
         - name: SQL_SERVER
           value: "sqlservertgz8460.database.windows.net"
         volumeMounts:
         - name: sqlsecret
-          mountPath: "/secrets"          
+          mountPath: "/secrets"  
       volumes:
       - name: sqlsecret
         secret:

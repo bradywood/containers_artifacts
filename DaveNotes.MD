@@ -113,6 +113,66 @@ export AKS_CLUSTER_ID=$(az aks show \
     --name $CLUSTER_NAME \
     --query id -o tsv)
 
-export APIDEV_ID=$(az ad group create --display-name api-dev --mail-nickname api-dev --query objectId -o tsv)
+export APIDEV_ID=$(az ad group create --display-name api-dev --mail-nickname api-dev --query id -o tsv)
 
-export WEBDEV_ID=$(az ad group create --display-name web-dev --mail-nickname web-dev --query objectId -o tsv)
+export WEBDEV_ID=$(az ad group create --display-name web-dev --mail-nickname web-dev --query id -o tsv)
+```
+
+### To list
+```
+export APIDEV_ID=$(az ad group list --display-name api-dev --query "[0].id" --output tsv)
+export WEBDEV_ID=$(az ad group list --display-name web-dev --query "[0].id" --output tsv)
+```
+
+### assign AD roles to the cluster
+```
+az role assignment create \
+  --assignee $WEBDEV_ID \
+  --role "Azure Kubernetes Service Cluster User Role" \
+  --scope $AKS_CLUSTER_ID
+
+az role assignment create \
+  --assignee $APIDEV_ID \
+  --role "Azure Kubernetes Service Cluster User Role" \
+  --scope $AKS_CLUSTER_ID
+
+```
+
+## Create api and web users
+```
+AKSAPI_ID=$(az ad user create \
+  --display-name "AKS API" \
+  --user-principal-name "api@msftopenhack6742ops.onmicrosoft.com" \
+  --password "Passw0rd" \
+  --query "[0].id" --output tsv)
+
+export AKSAPI_ID=$(az ad user list --upn "api@msftopenhack6742ops.onmicrosoft.com" --query "[0].id" -o tsv)
+
+AKSWEB_ID=$(az ad user create \
+  --display-name "AKS Web" \
+  --user-principal-name "web@msftopenhack6742ops.onmicrosoft.com" \
+  --password "Passw0rd" \
+  --query "[0].id" --output tsv)
+
+export AKSWEB_ID=$(az ad user list --upn "web@msftopenhack6742ops.onmicrosoft.com" --query "[0].id" -o tsv)
+
+az ad group member add --group "api-dev" --member-id $AKSAPI_ID
+az ad group member add --group "web-dev" --member-id $AKSWEB_ID
+```  
+
+## Create AKS Resource 
+kubectl apply -f createrole.yaml
+
+export API_GROUP_ID=$(az ad group show --group api-dev --query id -o tsv)
+7a711655-809c-4c88-ac26-049ea401786b
+
+export WEB_GROUP_ID=$(az ad group show --group web-dev --query id -o tsv)
+04802ec4-50f5-4fe3-8584-9d26ec3e15e9
+
+## Role Binding
+```
+kubectl apply -f yamls/rolebinding.yaml 
+```
+
+
+
