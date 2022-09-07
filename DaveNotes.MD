@@ -57,6 +57,11 @@ az aks create \
     --dns-service-ip 10.2.2.10 \
     --service-cidr 10.2.2.0/24 \
     --enable-managed-identity --node-count 2 --enable-addons monitoring --enable-msi-auth-for-monitoring \
-    --generate-ssh-keys --attach-acr registrytgz8460 
+    --generate-ssh-keys --attach-acr registrytgz8460
+
+```
+### Need to reauthenticate to new cluster
+```
+az aks get-credentials --resource-group $openHackEastAsia_RG --name tripAKSCluster
 
 
