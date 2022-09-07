@@ -1,4 +1,9 @@
 # Dave notes
+
+## Key Commands
+## az configure
+configures the az to do things like set the standard table output.
+
 ## Containers 2.0 Openhack
 ## Assignment 1
 ```
@@ -42,11 +47,15 @@ export CLUSTER_SUBNET_ID=$(az network vnet subnet list \
     --vnet-name $VNET \
     --query "[0].id" --output tsv)
 
+### if you wish to create..
 export CLUSTER_SUBNET_ID=$(az network vnet subnet create \
     -g $VNET_RESOURCE_GROUP --vnet-name $VNET \
     -n $CLUSTER_SUBNET_NAME \
     --address-prefixes $CLUSTER_ADDRESS_SPACE \
     --query id -o tsv)
+
+## List aks clusters
+### az aks list -o table
 
 az aks create \
     --resource-group $RESOURCE_GROUP \
@@ -58,5 +67,15 @@ az aks create \
     --service-cidr 10.2.2.0/24 \
     --enable-managed-identity --node-count 2 --enable-addons monitoring --enable-msi-auth-for-monitoring \
     --generate-ssh-keys --attach-acr registrytgz8460 
+```
 
 
+## Create Namespace
+### kubectl create namespace web --dry-run=client -o yaml > yamls/namespace.yaml
+```kubectl create -f yamls/namespace-web-api.yaml ```
+
+
+## Create an AKS Cluster with AD enabled.. 
+We need to go back and reacreate with the ad enabled.
+az ad group list --filter "displayname eq '<group-name>'" -o table
+az aks create -g myResourceGroup -n myManagedCluster --enable-aad --aad-admin-group-object-ids <id> [--aad-tenant-id <id>]
