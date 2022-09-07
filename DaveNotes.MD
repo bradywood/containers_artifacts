@@ -33,6 +33,9 @@ az network vnet list -o table
 
 export RESOURCE_GROUP=openHackEastAsia_RG
 export VNET=vnet
+export CLUSTER_SUBNET_NAME=tripAKSSubnet
+export CLUSTER_ADDRESS_SPACE=10.2.1.0/24
+export VNET_RESOURCE_GROUP=teamResources
 
 export CLUSTER_SUBNET_ID=$(az network vnet subnet list \
     --resource-group teamResources \
@@ -40,8 +43,8 @@ export CLUSTER_SUBNET_ID=$(az network vnet subnet list \
     --query "[0].id" --output tsv)
 
 export CLUSTER_SUBNET_ID=$(az network vnet subnet create \
-    -g $RESOURCE_GROUP --vnet-name $VNET \
-    -n $CLUSTER_SUBNET \
+    -g $VNET_RESOURCE_GROUP --vnet-name $VNET \
+    -n $CLUSTER_SUBNET_NAME \
     --address-prefixes $CLUSTER_ADDRESS_SPACE \
     --query id -o tsv)
 
@@ -51,7 +54,9 @@ az aks create \
     --network-plugin azure \
     --vnet-subnet-id $CLUSTER_SUBNET_ID \
     --docker-bridge-address 172.17.0.1/16 \
-    --dns-service-ip 10.2.1.10 \
-    --service-cidr 10.2.1.0/24 \
+    --dns-service-ip 10.2.2.10 \
+    --service-cidr 10.2.2.0/24 \
     --enable-managed-identity --node-count 2 --enable-addons monitoring --enable-msi-auth-for-monitoring \
     --generate-ssh-keys --attach-acr registrytgz8460 
+
+
