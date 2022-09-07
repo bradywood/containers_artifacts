@@ -53,9 +53,14 @@ export CLUSTER_SUBNET_ID=$(az network vnet subnet create \
     -n $CLUSTER_SUBNET_NAME \
     --address-prefixes $CLUSTER_ADDRESS_SPACE \
     --query id -o tsv)
-
+```
 ## List aks clusters
 ### az aks list -o table
+
+## Assignment 4 - enable cluster with AD.
+
+```
+export AD_ADMIN_GROUP_ID=$(az ad group list --display-name openHackAKSAdminGroup --query "[0].id" --output tsv)
 
 az aks create \
     --resource-group $RESOURCE_GROUP \
@@ -67,24 +72,28 @@ az aks create \
     --service-cidr 10.2.2.0/24 \
     --enable-managed-identity --node-count 2 --enable-addons monitoring --enable-msi-auth-for-monitoring \
     --generate-ssh-keys --attach-acr registrytgz8460 
-    --enable-aad 
+    --enable-aad --aad-admin-group-object-ids $AD_ADMIN_GROUP_ID
 ```
-```
+
 ### Need to reauthenticate to new cluster
 ```
 az aks get-credentials --resource-group $openHackEastAsia_RG --name tripAKSCluster
+```
 
 ## Create Namespace
 ### kubectl create namespace web --dry-run=client -o yaml > yamls/namespace.yaml
 ```kubectl create -f yamls/namespace-web-api.yaml ```
 
-## Create AD Group
+## AD Group
+### Create
+```az ad group create --display-name openHackAKSAdminGroup --mail-nickname openHackAKSAdminGroup```
+### LIST
 ```
-az ad group create --display-name openHackAKSAdminGroup --mail-nickname openHackAKSAdminGroup
+export AD_ADMIN_GROUP_ID=$(az ad group list --display-name openHackAKSAdminGroup --query "[0].id" --output tsv)
 ```
 
 ## Create an AKS Cluster with AD enabled.. 
 We need to go back and reacreate with the ad enabled.
 az ad group list --filter "displayname eq '<group-name>'" -o table
 az ad group create --display-name myAKSAdminGroup --mail-nickname myAKSAdminGroup
-az aks create -g myResourceGroup -n myManagedCluster --enable-aad --aad-admin-group-object-ids <id> [--aad-tenant-id <id>]
+az aks create -g myResourceGroup -n myManagedCluster --enable-aad --aad-admin-group-object-ids $AD_ADMIN_GROUP_ID
