@@ -5,6 +5,7 @@ metadata:
   labels:
     app: poi
   name: poi
+  namespace: api
 spec:
   type: ClusterIP
   ports:

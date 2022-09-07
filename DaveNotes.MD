@@ -181,4 +181,14 @@ namespace.svc.cluster.local
 http://trips.api.svc.cluster.local
 
 
+### Reseting DB secrets.
+```
+kubectl create secret generic sqlsecret --from-literal=SQL_USER=SA --from-literal=SQL_PASSWORD=Passw0rd --dry-run=client -o yaml > ~/repos/azurehack/containers_artifacts/yamls/secret.yaml
+```
+Dont forget to use the namespace of API.
 
+### Restarting pods
+kubectl delete pod poi-7469f477c6-sjp4g -n api
+kubectl delete pod trips-b45c7468d-bgwqv -n api
+kubectl delete pod userprofile-965fcb9fd-h4jb8 -n api
+kubectl delete pod userjava-9f5b97d9-lf7q9 -n api

@@ -5,6 +5,7 @@ metadata:
   labels:
     app: userjava
   name: userjava
+  namespace: api
 spec:
   type: ClusterIP
   ports:
