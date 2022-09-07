@@ -68,7 +68,10 @@ az aks create \
     --enable-managed-identity --node-count 2 --enable-addons monitoring --enable-msi-auth-for-monitoring \
     --generate-ssh-keys --attach-acr registrytgz8460 
 ```
-
+```
+### Need to reauthenticate to new cluster
+```
+az aks get-credentials --resource-group $openHackEastAsia_RG --name tripAKSCluster
 
 ## Create Namespace
 ### kubectl create namespace web --dry-run=client -o yaml > yamls/namespace.yaml
