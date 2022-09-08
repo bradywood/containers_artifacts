@@ -183,7 +183,7 @@ http://trips.api.svc.cluster.local
 
 ### Reseting DB secrets.
 ```
-kubectl create secret generic sqlsecret --from-literal=SQL_USER=SA --from-literal=SQL_PASSWORD=Passw0rd --dry-run=client -o yaml > ~/repos/azurehack/containers_artifacts/yamls/secret.yaml
+kubectl create secret generic sqlsecret --from-literal=SQL_USER=sqladmintGz8460 --from-literal=SQL_PASSWORD=Passw0rd --dry-run=client -o yaml > ~/repos/azurehack/containers_artifacts/yamls/secret.yaml
 ```
 Dont forget to use the namespace of API.
 
