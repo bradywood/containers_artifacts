@@ -25,3 +25,33 @@ subjects:
 - kind: Group
   namespace: api
   name: 7a711655-809c-4c88-ac26-049ea401786b
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: read-only
+  namespace: web
+subjects:
+- kind: Group
+  namespace: web
+  name: 04802ec4-50f5-4fe3-8584-9d26ec3e15e9  
+roleRef:
+  kind: ClusterRole
+  name: view
+  apiGroup: rbac.authorization.k8s.io
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: read-pods
+  namespace: api
+subjects:
+- kind: Group
+  namespace: api
+  name: 7a711655-809c-4c88-ac26-049ea401786b
+roleRef:
+  kind: ClusterRole
+  name: view
+  apiGroup: rbac.authorization.k8s.io  
